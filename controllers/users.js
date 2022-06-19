@@ -22,7 +22,7 @@ const getUserId = (req, res) => {
 const patchUserProfile = (req, res) => {
   const { name, about } = req.body;
 
-  User.findByIdAndUpdate(req.params.id, { name, about }, { new: true })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
     .then(user => res.send({ data: user }))
     .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
 };
