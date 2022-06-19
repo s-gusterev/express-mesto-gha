@@ -1,10 +1,10 @@
-const cardrouter = require('express').Router();
+const usersrouter = require('express').Router();
 const { createUser, getUser, getUserId } = require('../controllers/users');
 
-cardrouter.post('/', createUser);
+usersrouter.post('/', createUser);
 
-cardrouter.get('/', getUser);
+usersrouter.get('/', getUser);
 
-cardrouter.get('/:id', getUserId);
+usersrouter.get('/:id', getUserId);
 
-module.exports = cardrouter;
+module.exports = usersrouter;
