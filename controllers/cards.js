@@ -7,12 +7,11 @@ const createCard = (req, res) => {
     .then((card) => { res.send({ data: card }); })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя' });
+        res.status(400).send({ message: 'Переданы некорректные данные при создании карточки' });
       } else {
         res.status(500).send({ message: 'Неизвестная ошибка' });
       }
     });
-   // .catch((err) => { res.status(500).send({ message: 'Произошла ошибка' }, console.log(err.name)); });
 };
 
 const getCard = (req, res) => {

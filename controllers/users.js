@@ -19,12 +19,21 @@ const getUser = (req, res) => {
     .then((user) => { res.send({ data: user }); })
     .catch(() => { res.status(500).send({ message: 'Произошла ошибка' }); });
 };
+
 const getUserId = (req, res) => {
   User.findById(req.params.id)
-    .then((user) => { res.send({ data: user }); })
+
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: `Пользователь по указанному id ${req.params.id} не найден в базе данных` });
+      } else {
+        res.send({ data: user });
+      }
+    })
     .catch((err) => {
+      console.log(err.message);
       if (err.name === 'CastError') {
-        res.status(404).send({ message: 'Пользователь по указанному _id не найден' });
+        res.status(400).send({ message: 'Некоректно указан id пользователя' });
       } else {
         res.status(500).send({ message: 'Неизвестная ошибка' });
       }
