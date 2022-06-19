@@ -5,18 +5,30 @@ const createUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => { res.send({ data: user }); })
-    .catch((err) => { res.status(500).send({ message: 'Произошла ошибка' }); });
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя' });
+      } else {
+        res.status(500).send({ message: 'Неизвестная ошибка' });
+      }
+    });
 };
 
 const getUser = (req, res) => {
   User.find({})
     .then((user) => { res.send({ data: user }); })
-    .catch((err) => { res.status(500).send({ message: 'Произошла ошибка' }); });
+    .catch(() => { res.status(500).send({ message: 'Произошла ошибка' }); });
 };
 const getUserId = (req, res) => {
   User.findById(req.params.id)
     .then((user) => { res.send({ data: user }); })
-    .catch((err) => { res.status(500).send({ message: 'Произошла ошибка' }); });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(404).send({ message: 'Пользователь по указанному _id не найден' });
+      } else {
+        res.status(500).send({ message: 'Неизвестная ошибка' });
+      }
+    });
 };
 
 const patchUserProfile = (req, res) => {

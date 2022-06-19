@@ -5,7 +5,14 @@ const createCard = (req, res) => {
 
   Card.create({ name, link, owner: req.user._id })
     .then((card) => { res.send({ data: card }); })
-    .catch((err) => { res.status(500).send({ message: 'Произошла ошибка' }); });
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя' });
+      } else {
+        res.status(500).send({ message: 'Неизвестная ошибка' });
+      }
+    });
+   // .catch((err) => { res.status(500).send({ message: 'Произошла ошибка' }, console.log(err.name)); });
 };
 
 const getCard = (req, res) => {
