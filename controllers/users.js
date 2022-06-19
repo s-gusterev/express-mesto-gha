@@ -27,9 +27,17 @@ const patchUserProfile = (req, res) => {
     .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
+const patchUserAvatar = (req, res) => {
+  const avatar = req.body;
+  User.findByIdAndUpdate(req.user._id, avatar, { new: true })
+    .then(user => res.send({ data: user }))
+    .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
+};
+
 module.exports = {
   createUser,
   getUser,
   getUserId,
   patchUserProfile,
+  patchUserAvatar,
 };
