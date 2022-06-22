@@ -9,7 +9,7 @@ const createUser = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя' });
       } else {
-        res.status(500).send({ message: 'Неизвестная ошибка' });
+        res.status(500).send({ message: 'Произошла ошибка' });
       }
     });
 };
@@ -31,28 +31,52 @@ const getUserId = (req, res) => {
       }
     })
     .catch((err) => {
-      console.log(err.message);
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Некоректно указан id пользователя' });
       } else {
-        res.status(500).send({ message: 'Неизвестная ошибка' });
+        res.status(500).send({ message: 'Произошла ошибка' });
       }
     });
 };
 
 const patchUserProfile = (req, res) => {
   const { name, about } = req.body;
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'Пользователь по указанному id не найден в базе данных' });
+      } else {
+        res.send({ data: user });
+      }
+    })
 
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
-    .then((user) => { res.send({ data: user }); })
-    .catch((err) => { res.status(500).send({ message: 'Произошла ошибка' }); });
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
+      } else {
+        res.status(500).send({ message: 'Произошла ошибка' });
+      }
+    });
 };
 
 const patchUserAvatar = (req, res) => {
   const avatar = req.body;
-  User.findByIdAndUpdate(req.user._id, avatar, { new: true })
-    .then((user) => { res.send({ data: user }); })
-    .catch((err) => { res.status(500).send({ message: 'Произошла ошибка' }); });
+  User.findByIdAndUpdate(req.user._id, avatar, { new: true, runValidators: true })
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'Пользователь по указанному id не найден в базе данных' });
+      } else {
+        res.send({ data: user });
+      }
+    })
+
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
+      } else {
+        res.status(500).send({ message: 'Произошла ошибка' });
+      }
+    });
 };
 
 module.exports = {
