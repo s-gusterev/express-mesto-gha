@@ -22,8 +22,20 @@ const getCard = (req, res) => {
 
 const getCardId = (req, res) => {
   Card.findById(req.params.id)
-    .then((card) => { res.send({ data: card }); })
-    .catch(() => { res.status(500).send({ message: 'Произошла ошибка' }); });
+    .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: 'Карточка с указанным id не найдена' });
+      } else {
+        res.send({ data: card });
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Некорректно указан id карточки' });
+      } else {
+        res.status(500).send({ message: 'Произошла ошибка' });
+      }
+    });
 };
 
 const deleteCard = (req, res) => {
