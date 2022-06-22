@@ -53,6 +53,8 @@ const patchUserProfile = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
+      } else if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Не правильно указан id пользователя' });
       } else {
         res.status(500).send({ message: 'Произошла ошибка' });
       }
@@ -73,6 +75,8 @@ const patchUserAvatar = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
+      } else if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Не правильно указан id пользователя' });
       } else {
         res.status(500).send({ message: 'Произошла ошибка' });
       }
