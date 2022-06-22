@@ -35,7 +35,13 @@ const deleteCard = (req, res) => {
         res.send({ data: card });
       }
     })
-    .catch(() => { res.status(500).send({ message: 'Произошла ошибка' }); });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Некорректно указан id карточки' });
+      } else {
+        res.status(500).send({ message: 'Произошла ошибка' });
+      }
+    });
 };
 
 const likeCard = (req, res) => {
