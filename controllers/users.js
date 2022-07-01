@@ -33,23 +33,10 @@ const createUser = (req, res) => {
 const login = (req, res) => {
   const { email, password } = req.body;
 
-  User.findOne({ email })
+  return User.findUserByCredentials(email, password)
     .then((user) => {
-      if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
-      }
-
-      return Promise.all([
-        user,
-        bcrypt.compare(password, user.password),
-      ]);
-    })
-    .then((user) => {
-      if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
-      }
-      const token = jwt.sign({ _id: user._id }, 'secret-token-mesto');
-      return res.send({ token });
+      const token = jwt.sign({ _id: user._id }, 'secret-token-mesto', { expiresIn: '7d' });
+      res.send({ token });
     })
     .catch((err) => {
       res.status(401).send({ message: err.message });
@@ -60,6 +47,15 @@ const getUser = (req, res) => {
   User.find({})
     .then((user) => { res.send({ data: user }); })
     .catch(() => { res.status(500).send({ message: 'Произошла ошибка' }); });
+};
+
+const getUserInfo = (req, res) => {
+  const userId = req.user._id;
+  User.findById(userId)
+    .then((user) => { res.send({ data: user }); })
+    .catch(() => {
+      res.status(500).send({ message: 'Произошла ошибка' });
+    });
 };
 
 const getUserId = (req, res) => {
@@ -132,4 +128,5 @@ module.exports = {
   patchUserProfile,
   patchUserAvatar,
   login,
+  getUserInfo,
 };

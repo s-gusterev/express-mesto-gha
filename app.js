@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const usersrouter = require('./routes/users');
 const cardsrouter = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
+const { auth } = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -11,17 +12,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '62aeee494fb961b9842c61d4',
-  };
+app.use('/users', auth, usersrouter);
 
-  next();
-});
-
-app.use('/users', usersrouter);
-
-app.use('/cards', cardsrouter);
+app.use('/cards', auth, cardsrouter);
 
 app.post('/signin', login);
 app.post('/signup', createUser);
