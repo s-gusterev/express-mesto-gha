@@ -39,13 +39,19 @@ const getCardId = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: 'Карточка с указанным id не найдена' });
-      } else {
-        res.send({ data: card });
+        return res.status(404).send({ message: 'Карточка с указанным id не найдена' });
       }
+      if (card.owner.toString() === req.user._id) {
+        return Card.deleteOne(card)
+          .then(() => {
+            res.status(200).send({ message: 'Карточка успешно удалена' });
+          });
+      }
+      console.log(card.owner.toString());
+      return res.status(403).send({ message: 'Невозможно удалить карточку другого пользователя' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
