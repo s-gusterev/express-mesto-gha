@@ -23,7 +23,11 @@ app.use((req, res) => {
   res.status(404).send({ message: 'Страницы не существует' });
 });
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+mongoose.connect('mongodb://localhost:27017/mestodb');
+
+app.use((err, req, res, next) => {
+  res.status(500).send({ message: 'На сервере произошла ошибка' });
+  next();
 });
 
 app.listen(PORT, () => { console.log(`Сервер работает на порту ${PORT}`); });

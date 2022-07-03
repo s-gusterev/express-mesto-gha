@@ -45,12 +45,11 @@ const deleteCard = (req, res) => {
         return res.status(404).send({ message: 'Карточка с указанным id не найдена' });
       }
       if (card.owner.toString() === req.user._id) {
-        return Card.deleteOne(card)
+        return Card.findByIdAndDelete(req.params.cardId)
           .then(() => {
             res.status(200).send({ message: 'Карточка успешно удалена' });
           });
       }
-      console.log(card.owner.toString());
       return res.status(403).send({ message: 'Невозможно удалить карточку другого пользователя' });
     })
     .catch((err) => {
