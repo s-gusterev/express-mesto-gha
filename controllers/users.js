@@ -14,6 +14,9 @@ const createUser = (req, res, next) => {
     email,
     password,
   } = req.body;
+  if (!email || !password) {
+    throw new BadRequestError('Вы не заполнили email или пароль');
+  }
   bcrypt
     .hash(password, 10)
     .then((hash) => {
@@ -26,7 +29,8 @@ const createUser = (req, res, next) => {
     })
     .then((user) => { res.send({ data: user }); })
     .catch((err) => {
-      console.log(err.message);
+      console.log(err.name);
+      console.log(err.code);
       if (err.name === 'ValidationError') {
         throw new BadRequestError('Переданы некорректные данные при создании пользователя');
       }
