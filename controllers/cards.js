@@ -58,7 +58,8 @@ const deleteCard = (req, res, next) => {
         throw new BadRequestError('Некорректно указан id карточки');
       }
       next(err);
-    });
+    })
+    .catch(next);
 };
 
 const likeCard = (req, res, next) => {
