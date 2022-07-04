@@ -72,17 +72,18 @@ const getUserId = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError(`Пользователь по указанному id ${req.params.id} не найден в базе данных`);
+        throw new NotFoundError('Пользователь по указанному id не найден в базе данных');
       } else {
         res.send({ data: user });
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
+        console.log(err.name);
         throw new BadRequestError('Некоректно указан id пользователя');
       }
-    })
-    .catch(next);
+      next(err);
+    });
 };
 
 const patchUserProfile = (req, res, next) => {
