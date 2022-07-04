@@ -45,6 +45,8 @@ const createUser = (req, res, next) => {
       }
       if (err.code === 11000) {
         throw new ConflictError('Переданы некорректные данные при создании пользователя');
+      } else {
+        next(err);
       }
     })
     .catch(next);
@@ -115,6 +117,8 @@ const patchUserProfile = (req, res, next) => {
         throw new BadRequestError('Переданы некорректные данные при обновлении профиля');
       } else if (err.name === 'CastError') {
         throw new BadRequestError('Не правильно указан id пользователя');
+      } else {
+        next(err);
       }
     })
     .catch(next);
@@ -135,6 +139,8 @@ const patchUserAvatar = (req, res, next) => {
         throw new BadRequestError('Переданы некорректные данные при обновлении профиля');
       } else if (err.name === 'CastError') {
         throw new BadRequestError('Не правильно указан id пользователя');
+      } else {
+        next(err);
       }
     })
     .catch(next);

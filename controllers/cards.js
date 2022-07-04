@@ -11,6 +11,8 @@ const createCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new BadRequestError('Переданы некорректные данные при создании карточки');
+      } else {
+        next(err);
       }
     })
     .catch(next);
@@ -34,6 +36,8 @@ const getCardId = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new BadRequestError('Некорректно указан id карточки');
+      } else {
+        next(err);
       }
     })
     .catch(next);
