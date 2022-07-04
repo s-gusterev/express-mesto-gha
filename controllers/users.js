@@ -4,6 +4,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
+const ConflictError = require('../errors/ConflictError');
 
 const createUser = (req, res, next) => {
   const {
@@ -25,8 +26,12 @@ const createUser = (req, res, next) => {
     })
     .then((user) => { res.send({ data: user }); })
     .catch((err) => {
+      console.log(err.message);
       if (err.name === 'ValidationError') {
         throw new BadRequestError('Переданы некорректные данные при создании пользователя');
+      }
+      if (err.code === 11000) {
+        throw new ConflictError('Переданы некорректные данные при создании пользователя');
       }
     })
     .catch(next);
@@ -86,7 +91,6 @@ const patchUserProfile = (req, res, next) => {
         res.send({ data: user });
       }
     })
-
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new BadRequestError('Переданы некорректные данные при обновлении профиля');
