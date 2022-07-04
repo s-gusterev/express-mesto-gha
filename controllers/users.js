@@ -44,6 +44,10 @@ const createUser = (req, res, next) => {
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
+  if (!email || !password) {
+    throw new BadRequestError('Незаполнены поля email или пароль');
+  }
+
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'secret-token-mesto', { expiresIn: '7d' });
