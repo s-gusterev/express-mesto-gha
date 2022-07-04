@@ -83,7 +83,8 @@ const getUserId = (req, res, next) => {
         throw new BadRequestError('Некоректно указан id пользователя');
       }
       next(err);
-    });
+    })
+    .catch(next);
 };
 
 const patchUserProfile = (req, res, next) => {
