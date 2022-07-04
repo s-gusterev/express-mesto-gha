@@ -17,6 +17,7 @@ const createUser = (req, res, next) => {
   if (!email || !password) {
     throw new BadRequestError('Вы не заполнили email или пароль');
   }
+
   bcrypt
     .hash(password, 10)
     .then((hash) => {
@@ -27,7 +28,15 @@ const createUser = (req, res, next) => {
       );
       return user();
     })
-    .then((user) => { res.send({ data: user }); })
+    .then((user) => {
+      res.send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+        id: user._id,
+      });
+    })
     .catch((err) => {
       console.log(err.name);
       console.log(err.code);
